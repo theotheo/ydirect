@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import argparse
 import logging
 import re
 from collections import defaultdict
@@ -10,7 +11,9 @@ from tqdm import tqdm, trange
 from grab import Grab
 
 logging.basicConfig(filename='{}.log'.format(datetime.now().strftime('%Y-%m-%d-%H:%M')), level=logging.ERROR)
-
+parser = argparse.ArgumentParser()
+parser.add_argument("-f", "--filename", default='firms.csv', help='Имя файла для сохранения результатов', required=False)
+parser.add_argument
 g = Grab()
 g.setup(encoding='utf-8', connect_timeout=3, timeout=5)
 URL = 'http://direct.yandex.ru/search?&rid=213&text={0}&page={1}'
@@ -101,7 +104,7 @@ def fetch_ads(query):
             yield ad
 
 
-def fetch_queries_to_file(queries, filename='firms.csv'):
+def fetch_queries_to_file(queries, filename):
     """
     Качаем все объявления в файл
     Args:
@@ -125,10 +128,14 @@ def fetch_queries_to_file(queries, filename='firms.csv'):
                     uniq_phones.append(ad['phone'])
 
 if __name__ == "__main__":
+
+    args = parser.parse_args()
+    filename = args.filename
+
     # список запросов
     words = [
         'застройщики москвы и московской области',
         'новостройки с отделкой в подмосковье от застройщика'
     ]
 
-    fetch_queries_to_file(words)
+    fetch_queries_to_file(words, filename)
